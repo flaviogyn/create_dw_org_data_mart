@@ -1,0 +1,15 @@
+De posse dos DDLs Northwind e Mercearia:
+
+1) Construir o DW Organizacional integrando ambos.
+
+2) A partir do DW Organizacional, apresentar pelo menos 03 (três) modelagens de DataMarts, indicando os assuntos, fatos e  dimensões, justificando seus usos.
+
+3) Utilizar ferramentas de análise de Dados e aplicar ao DW e Datamarts.
+
+OBS.:
+- É permitido usar ferramentas de Integração de Dados para fazer a ETL.
+- Importante indicar os Dados Externos e dimensão Tempo, além de respeitar os conceitos de Granularidade, Integração, Historicidade etc., conforme discutidos em sala.
+
+- Caso o estudo seja aplicado à sua área ou BD de seu trabalho, importante observar a LGPD.
+
+Entregáveis: DDLs do DW e Datamarts, além relatório técnico do processo.

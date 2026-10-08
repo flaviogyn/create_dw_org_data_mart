@@ -1,0 +1,1235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="PostgreSQL" database="PostgreSQL" id="1d8f0376-2cba-4e63-a0d1-7265ec82d3a2" >
+	<schema name="dm_compras" catalogname="postgres" >
+		<table name="dim_fornecedor" spec="" >
+			<column name="id_fornecedor_dw" type="bigint" mandatory="y" />
+			<column name="id_pessoa" type="integer" />
+			<column name="origem_principal" type="varchar" length="30" />
+			<column name="nome" type="varchar" length="255" />
+			<column name="cidade" type="varchar" length="100" />
+			<column name="estado" type="varchar" length="100" />
+			<column name="pais" type="varchar" length="100" />
+			<index name="dim_fornecedor_pkey" unique="PRIMARY_KEY" >
+				<column name="id_fornecedor_dw" />
+			</index>
+		</table>
+		<table name="dim_produto" spec="" >
+			<column name="id_produto_dw" type="bigint" mandatory="y" />
+			<column name="id_produto" type="integer" />
+			<column name="origem_principal" type="varchar" length="30" />
+			<column name="produto" type="varchar" length="255" />
+			<column name="categoria" type="varchar" length="255" />
+			<index name="dim_produto_pkey" unique="PRIMARY_KEY" >
+				<column name="id_produto_dw" />
+			</index>
+		</table>
+		<table name="dim_tempo" spec="" >
+			<column name="id_tempo" type="integer" mandatory="y" />
+			<column name="data_completa" type="date" mandatory="y" />
+			<column name="dia" type="integer" mandatory="y" />
+			<column name="mes" type="integer" mandatory="y" />
+			<column name="nome_mes" type="varchar" length="20" />
+			<column name="trimestre" type="integer" />
+			<column name="semestre" type="integer" />
+			<column name="semana_ano" type="integer" />
+			<column name="ano" type="integer" />
+			<column name="dia_semana" type="integer" />
+			<column name="nome_dia_semana" type="varchar" length="20" />
+			<column name="fim_de_semana" type="boolean" />
+			<column name="feriado" type="boolean" />
+			<index name="dim_tempo_pkey" unique="PRIMARY_KEY" >
+				<column name="id_tempo" />
+			</index>
+		</table>
+		<table name="fato_compras" spec="" >
+			<column name="id_fato_compra_dw" type="bigint" mandatory="y" />
+			<column name="id_tempo" type="integer" mandatory="y" />
+			<column name="id_fornecedor_dw" type="bigint" mandatory="y" />
+			<column name="id_produto_dw" type="bigint" mandatory="y" />
+			<column name="data_pedido" type="date" mandatory="y" />
+			<column name="data_entrada" type="date" />
+			<column name="quantidade" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="valor_unitario" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="valor_total" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="id_origem_registro" type="varchar" length="100" />
+			<column name="sistema_origem" type="varchar" length="50" />
+			<index name="fato_compras_pkey" unique="PRIMARY_KEY" >
+				<column name="id_fato_compra_dw" />
+			</index>
+		</table>
+	</schema>
+	<schema name="dm_estoque" catalogname="postgres" >
+		<table name="dim_fonte_dado" spec="" >
+			<column name="id_fonte_dw" type="bigint" mandatory="y" />
+			<column name="sistema_origem" type="varchar" length="100" />
+			<column name="tabela_origem" type="varchar" length="100" />
+			<column name="tipo_fonte" type="varchar" length="50" />
+			<index name="dim_fonte_dado_pkey" unique="PRIMARY_KEY" >
+				<column name="id_fonte_dw" />
+			</index>
+		</table>
+		<table name="dim_produto" spec="" >
+			<column name="id_produto_dw" type="bigint" mandatory="y" />
+			<column name="id_produto" type="integer" />
+			<column name="origem_principal" type="varchar" length="30" />
+			<column name="produto" type="varchar" length="255" />
+			<column name="categoria" type="varchar" length="255" />
+			<column name="fornecedor" type="varchar" length="255" />
+			<column name="unidades_estoque" type="integer" />
+			<column name="unidades_em_pedido" type="integer" />
+			<column name="nivel_reposicao" type="integer" />
+			<column name="descontinuado" type="boolean" />
+			<index name="dim_produto_pkey" unique="PRIMARY_KEY" >
+				<column name="id_produto_dw" />
+			</index>
+		</table>
+		<table name="dim_tempo" spec="" >
+			<column name="id_tempo" type="integer" mandatory="y" />
+			<column name="data_completa" type="date" mandatory="y" />
+			<column name="dia" type="integer" mandatory="y" />
+			<column name="mes" type="integer" mandatory="y" />
+			<column name="nome_mes" type="varchar" length="20" />
+			<column name="trimestre" type="integer" />
+			<column name="semestre" type="integer" />
+			<column name="semana_ano" type="integer" />
+			<column name="ano" type="integer" />
+			<column name="dia_semana" type="integer" />
+			<column name="nome_dia_semana" type="varchar" length="20" />
+			<column name="fim_de_semana" type="boolean" />
+			<column name="feriado" type="boolean" />
+			<index name="dim_tempo_pkey" unique="PRIMARY_KEY" >
+				<column name="id_tempo" />
+			</index>
+		</table>
+		<table name="fato_estoque" spec="" >
+			<column name="id_fato_estoque_dw" type="bigint" mandatory="y" />
+			<column name="id_produto_dw" type="bigint" mandatory="y" />
+			<column name="id_tempo" type="integer" mandatory="y" />
+			<column name="id_fonte_dw" type="bigint" />
+			<column name="quantidade_estoque" type="numeric" length="18" decimal="4" />
+			<column name="quantidade_em_pedido" type="numeric" length="18" decimal="4" />
+			<column name="nivel_reposicao" type="numeric" length="18" decimal="4" />
+			<column name="valor_estoque" type="numeric" length="18" decimal="4" />
+			<column name="id_origem_registro" type="varchar" length="100" />
+			<column name="sistema_origem" type="varchar" length="50" />
+			<index name="fato_estoque_pkey" unique="PRIMARY_KEY" >
+				<column name="id_fato_estoque_dw" />
+			</index>
+		</table>
+	</schema>
+	<schema name="dm_vendas" catalogname="postgres" >
+		<udt name="tablefunc_crosstab_2" udt_value_type="VARCHAR" udt_precision="NONE" udt_extension="tablefunc" sync_priority="900" >
+			<udt_script><![CDATA[CREATE TYPE ${name} AS (row_name text, category_1 text, category_2 text)]]></udt_script>
+		</udt>
+		<udt name="tablefunc_crosstab_3" udt_value_type="VARCHAR" udt_precision="NONE" udt_extension="tablefunc" sync_priority="900" >
+			<udt_script><![CDATA[CREATE TYPE ${name} AS (row_name text, category_1 text, category_2 text, category_3 text)]]></udt_script>
+		</udt>
+		<udt name="tablefunc_crosstab_4" udt_value_type="VARCHAR" udt_precision="NONE" udt_extension="tablefunc" sync_priority="900" >
+			<udt_script><![CDATA[CREATE TYPE ${name} AS (row_name text, category_1 text, category_2 text, category_3 text, category_4 text)]]></udt_script>
+		</udt>
+		<table name="dim_cliente" spec="" >
+			<column name="id_cliente_dw" type="bigint" mandatory="y" />
+			<column name="id_pessoa" type="varchar" length="50" />
+			<column name="origem_principal" type="varchar" length="30" />
+			<column name="nome" type="varchar" length="255" />
+			<column name="empresa" type="varchar" length="255" />
+			<column name="cidade" type="varchar" length="100" />
+			<column name="regiao" type="varchar" length="100" />
+			<column name="estado" type="varchar" length="100" />
+			<column name="pais" type="varchar" length="100" />
+			<column name="tipo_cliente" type="varchar" length="30" />
+			<index name="dim_cliente_pkey" unique="PRIMARY_KEY" >
+				<column name="id_cliente_dw" />
+			</index>
+		</table>
+		<table name="dim_dados_externos" spec="" >
+			<column name="id_dados_externos_dw" type="bigint" mandatory="y" />
+			<column name="id_dado_externo" type="varchar" length="100" />
+			<column name="indicador" type="varchar" length="100" />
+			<column name="tipo_dado" type="varchar" length="50" />
+			<column name="valor" type="numeric" length="18" decimal="6" />
+			<column name="unidade" type="varchar" length="50" />
+			<column name="data_referencia" type="date" />
+			<index name="dim_dados_externos_pkey" unique="PRIMARY_KEY" >
+				<column name="id_dados_externos_dw" />
+			</index>
+		</table>
+		<table name="dim_localizacao" spec="" >
+			<column name="id_localizacao_dw" type="bigint" mandatory="y" />
+			<column name="cidade" type="varchar" length="255" />
+			<column name="estado" type="varchar" length="100" />
+			<column name="sigla_estado" type="varchar" length="20" />
+			<column name="pais" type="varchar" length="100" />
+			<column name="regiao" type="varchar" length="100" />
+			<index name="dim_localizacao_pkey" unique="PRIMARY_KEY" >
+				<column name="id_localizacao_dw" />
+			</index>
+		</table>
+		<table name="dim_produto" spec="" >
+			<column name="id_produto_dw" type="bigint" mandatory="y" />
+			<column name="id_produto" type="integer" />
+			<column name="origem_principal" type="varchar" length="30" />
+			<column name="produto" type="varchar" length="255" />
+			<column name="categoria" type="varchar" length="255" />
+			<index name="dim_produto_pkey" unique="PRIMARY_KEY" >
+				<column name="id_produto_dw" />
+			</index>
+		</table>
+		<table name="dim_tempo" spec="" >
+			<column name="id_tempo" type="integer" mandatory="y" />
+			<column name="data_completa" type="date" mandatory="y" />
+			<column name="dia" type="integer" mandatory="y" />
+			<column name="mes" type="integer" mandatory="y" />
+			<column name="nome_mes" type="varchar" length="20" />
+			<column name="trimestre" type="integer" />
+			<column name="semestre" type="integer" />
+			<column name="semana_ano" type="integer" />
+			<column name="ano" type="integer" />
+			<column name="dia_semana" type="integer" />
+			<column name="nome_dia_semana" type="varchar" length="20" />
+			<column name="fim_de_semana" type="boolean" />
+			<column name="feriado" type="boolean" />
+			<index name="dim_tempo_pkey" unique="PRIMARY_KEY" >
+				<column name="id_tempo" />
+			</index>
+		</table>
+		<table name="dim_vendedor" spec="" >
+			<column name="id_vendedor_dw" type="bigint" mandatory="y" />
+			<column name="id_employee" type="smallint" />
+			<column name="nome" type="varchar" length="100" />
+			<column name="sobrenome" type="varchar" length="100" />
+			<column name="cargo" type="varchar" length="100" />
+			<index name="dim_vendedor_pkey" unique="PRIMARY_KEY" >
+				<column name="id_vendedor_dw" />
+			</index>
+		</table>
+		<table name="fato_vendas" spec="" >
+			<column name="id_fato_venda_dw" type="bigint" mandatory="y" />
+			<column name="id_tempo" type="integer" mandatory="y" />
+			<column name="id_cliente_dw" type="bigint" mandatory="y" />
+			<column name="id_produto_dw" type="bigint" mandatory="y" />
+			<column name="id_vendedor_dw" type="bigint" />
+			<column name="id_localizacao_dw" type="bigint" />
+			<column name="quantidade" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="valor_unitario" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="valor_bruto" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="valor_desconto" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="valor_liquido" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="frete" type="numeric" length="18" decimal="4" />
+			<column name="id_origem_registro" type="varchar" length="100" />
+			<column name="sistema_origem" type="varchar" length="50" />
+			<index name="fato_vendas_pkey" unique="PRIMARY_KEY" >
+				<column name="id_fato_venda_dw" />
+			</index>
+		</table>
+		<function name="connectby" id="f333e5de-7a8e-4b7b-949a-fb9d03613765" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE OR REPLACE FUNCTION dm_vendas.connectby(text, text, text, text, text, integer)
+ RETURNS SETOF record
+ LANGUAGE c
+ STABLE STRICT
+AS '$libdir/tablefunc', $function$connectby_text_serial$function$;]]></string>
+		</function>
+		<function name="crosstab" id="7ff80e51-254b-44bc-ad2e-4a716b0dac6c" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE OR REPLACE FUNCTION dm_vendas.crosstab(text, text)
+ RETURNS SETOF record
+ LANGUAGE c
+ STABLE STRICT
+AS '$libdir/tablefunc', $function$crosstab_hash$function$;]]></string>
+		</function>
+		<function name="crosstab2" id="6639207f-6abd-4929-995e-f320b80284a0" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE OR REPLACE FUNCTION dm_vendas.crosstab2(text)
+ RETURNS SETOF dm_vendas.tablefunc_crosstab_2
+ LANGUAGE c
+ STABLE STRICT
+AS '$libdir/tablefunc', $function$crosstab$function$;]]></string>
+		</function>
+		<function name="crosstab3" id="eaa8fa63-73c8-4dba-95fc-b2ef6f80e593" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE OR REPLACE FUNCTION dm_vendas.crosstab3(text)
+ RETURNS SETOF dm_vendas.tablefunc_crosstab_3
+ LANGUAGE c
+ STABLE STRICT
+AS '$libdir/tablefunc', $function$crosstab$function$;]]></string>
+		</function>
+		<function name="crosstab4" id="468b3a44-2eac-4821-ab07-fb6e1d214884" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE OR REPLACE FUNCTION dm_vendas.crosstab4(text)
+ RETURNS SETOF dm_vendas.tablefunc_crosstab_4
+ LANGUAGE c
+ STABLE STRICT
+AS '$libdir/tablefunc', $function$crosstab$function$;]]></string>
+		</function>
+		<function name="normal_rand" id="19f433ae-5076-4493-945b-27137a796bbf" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE OR REPLACE FUNCTION dm_vendas.normal_rand(integer, double precision, double precision)
+ RETURNS SETOF double precision
+ LANGUAGE c
+ STRICT
+AS '$libdir/tablefunc', $function$normal_rand$function$;]]></string>
+		</function>
+	</schema>
+	<schema name="dw_organizacional" catalogname="postgres" >
+		<table name="dim_cliente" spec="" >
+			<column name="id_cliente_dw" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('dw_organizacional.dim_cliente_id_cliente_dw_seq'::regclass)]]></defo>
+			</column>
+			<column name="id_pessoa" type="varchar" length="50" />
+			<column name="origem_principal" type="varchar" length="30" mandatory="y" />
+			<column name="tipo_cliente" type="varchar" length="30" />
+			<column name="nome" type="varchar" length="255" />
+			<column name="documento" type="varchar" length="255" />
+			<column name="sexo" type="varchar" length="50" />
+			<column name="renda" type="numeric" length="18" decimal="2" />
+			<column name="estado_civil" type="varchar" length="100" />
+			<column name="data_nascimento" type="date" />
+			<column name="profissao" type="varchar" length="100" />
+			<column name="empresa" type="varchar" length="255" />
+			<column name="contato" type="varchar" length="255" />
+			<column name="cargo_contato" type="varchar" length="100" />
+			<column name="endereco" type="varchar" length="255" />
+			<column name="complemento" type="varchar" length="255" />
+			<column name="cidade" type="varchar" length="100" />
+			<column name="regiao" type="varchar" length="100" />
+			<column name="estado" type="varchar" length="100" />
+			<column name="cep" type="varchar" length="30" />
+			<column name="pais" type="varchar" length="100" />
+			<column name="telefone" type="varchar" length="100" />
+			<column name="data_inicio" type="date" mandatory="y" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<column name="data_fim" type="date" />
+			<column name="registro_atual" type="boolean" mandatory="y" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<column name="data_carga" type="timestamp" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="dim_cliente_pkey" unique="PRIMARY_KEY" >
+				<column name="id_cliente_dw" />
+			</index>
+			<index name="ix_dim_cliente_id_pessoa" unique="NORMAL" spec="USING  btree" >
+				<column name="id_pessoa" />
+			</index>
+			<constraint name="ck_dim_cliente_chave_origem" type="CHECK" options="" >
+				<string><![CDATA[id_pessoa IS NOT NULL]]></string>
+			</constraint>
+			<constraint name="ck_dim_cliente_origem" type="CHECK" options="" >
+				<string><![CDATA[origem_principal)::text = ANY ((ARRAY['MERCEARIA'::character varying, 'NORTHWIND'::character varying, 'INTEGRADO'::character varying])::text[]]]></string>
+			</constraint>
+		</table>
+		<table name="dim_dados_externos" spec="" >
+			<column name="id_dados_externos_dw" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('dw_organizacional.dim_dados_externos_id_dados_externos_dw_seq'::regclass)]]></defo>
+			</column>
+			<column name="id_dado_externo" type="varchar" length="100" mandatory="y" />
+			<column name="data_referencia" type="date" mandatory="y" />
+			<column name="tipo_dado" type="varchar" length="50" mandatory="y" />
+			<column name="indicador" type="varchar" length="100" mandatory="y" />
+			<column name="descricao" type="varchar" length="200" />
+			<column name="valor" type="numeric" length="18" decimal="6" mandatory="y" />
+			<column name="unidade" type="varchar" length="50" />
+			<column name="fonte" type="varchar" length="100" mandatory="y" />
+			<column name="referencia_origem" type="varchar" length="200" />
+			<column name="data_carga" type="timestamp" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="dim_dados_externos_pkey" unique="PRIMARY_KEY" >
+				<column name="id_dados_externos_dw" />
+			</index>
+			<index name="dim_dados_externos_id_dado_externo_key" unique="UNIQUE_KEY" >
+				<column name="id_dado_externo" />
+			</index>
+		</table>
+		<table name="dim_fonte_dado" spec="" >
+			<column name="id_fonte_dw" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('dw_organizacional.dim_fonte_dado_id_fonte_dw_seq'::regclass)]]></defo>
+			</column>
+			<column name="sistema_origem" type="varchar" length="100" mandatory="y" />
+			<column name="tabela_origem" type="varchar" length="100" mandatory="y" />
+			<column name="tipo_fonte" type="varchar" length="50" mandatory="y" />
+			<column name="descricao" type="varchar" length="255" />
+			<column name="data_carga" type="timestamp" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="dim_fonte_dado_pkey" unique="PRIMARY_KEY" >
+				<column name="id_fonte_dw" />
+			</index>
+		</table>
+		<table name="dim_fornecedor" spec="" >
+			<column name="id_fornecedor_dw" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('dw_organizacional.dim_fornecedor_id_fornecedor_dw_seq'::regclass)]]></defo>
+			</column>
+			<column name="id_pessoa" type="integer" />
+			<column name="origem_principal" type="varchar" length="30" mandatory="y" />
+			<column name="nome" type="varchar" length="255" mandatory="y" />
+			<column name="contato" type="varchar" length="255" />
+			<column name="cargo_contato" type="varchar" length="100" />
+			<column name="endereco" type="varchar" length="255" />
+			<column name="cidade" type="varchar" length="100" />
+			<column name="regiao" type="varchar" length="100" />
+			<column name="estado" type="varchar" length="100" />
+			<column name="cep" type="varchar" length="30" />
+			<column name="pais" type="varchar" length="100" />
+			<column name="telefone" type="varchar" length="100" />
+			<column name="fax" type="varchar" length="100" />
+			<column name="homepage" type="varchar" length="255" />
+			<column name="data_inicio" type="date" mandatory="y" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<column name="data_fim" type="date" />
+			<column name="registro_atual" type="boolean" mandatory="y" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<column name="data_carga" type="timestamp" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="dim_fornecedor_pkey" unique="PRIMARY_KEY" >
+				<column name="id_fornecedor_dw" />
+			</index>
+			<index name="ix_dim_fornecedor_id_pessoa" unique="NORMAL" spec="USING  btree" >
+				<column name="id_pessoa" />
+			</index>
+			<constraint name="ck_dim_fornecedor_origem" type="CHECK" options="" >
+				<string><![CDATA[origem_principal)::text = ANY ((ARRAY['MERCEARIA'::character varying, 'NORTHWIND'::character varying, 'INTEGRADO'::character varying])::text[]]]></string>
+			</constraint>
+		</table>
+		<table name="dim_localizacao" spec="" >
+			<column name="id_localizacao_dw" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('dw_organizacional.dim_localizacao_id_localizacao_dw_seq'::regclass)]]></defo>
+			</column>
+			<column name="id_uf" type="integer" />
+			<column name="id_cidade" type="integer" />
+			<column name="id_bairro" type="integer" />
+			<column name="id_logradouro" type="integer" />
+			<column name="id_endereco" type="integer" />
+			<column name="nome_estado" type="varchar" length="100" />
+			<column name="sigla_estado" type="varchar" length="20" />
+			<column name="nome_cidade" type="varchar" length="255" />
+			<column name="nome_bairro" type="varchar" length="255" />
+			<column name="regiao_cidade" type="varchar" length="255" />
+			<column name="tipo_logradouro" type="varchar" length="100" />
+			<column name="logradouro" type="varchar" length="255" />
+			<column name="cep" type="varchar" length="30" />
+			<column name="complemento" type="varchar" length="255" />
+			<column name="pais" type="varchar" length="100" />
+			<column name="regiao" type="varchar" length="100" />
+			<column name="origem_principal" type="varchar" length="30" mandatory="y" />
+			<index name="dim_localizacao_pkey" unique="PRIMARY_KEY" >
+				<column name="id_localizacao_dw" />
+			</index>
+			<constraint name="ck_dim_localizacao_origem" type="CHECK" options="" >
+				<string><![CDATA[origem_principal)::text = ANY ((ARRAY['MERCEARIA'::character varying, 'NORTHWIND'::character varying, 'EXTERNO'::character varying, 'INTEGRADO'::character varying])::text[]]]></string>
+			</constraint>
+		</table>
+		<table name="dim_produto" spec="" >
+			<column name="id_produto_dw" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('dw_organizacional.dim_produto_id_produto_dw_seq'::regclass)]]></defo>
+			</column>
+			<column name="id_produto" type="integer" />
+			<column name="origem_principal" type="varchar" length="30" mandatory="y" />
+			<column name="produto" type="varchar" length="255" mandatory="y" />
+			<column name="categoria" type="varchar" length="255" />
+			<column name="id_categoria" type="integer" />
+			<column name="id_category" type="smallint" />
+			<column name="fornecedor" type="varchar" length="255" />
+			<column name="id_fornecedor" type="integer" />
+			<column name="id_supplier" type="smallint" />
+			<column name="valor_venda" type="numeric" length="18" decimal="4" />
+			<column name="preco_unitario" type="numeric" length="18" decimal="4" />
+			<column name="quantidade_por_unidade" type="varchar" length="100" />
+			<column name="unidades_estoque" type="integer" />
+			<column name="unidades_em_pedido" type="integer" />
+			<column name="nivel_reposicao" type="integer" />
+			<column name="descontinuado" type="boolean" />
+			<column name="data_inicio" type="date" mandatory="y" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<column name="data_fim" type="date" />
+			<column name="registro_atual" type="boolean" mandatory="y" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<column name="data_carga" type="timestamp" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="dim_produto_pkey" unique="PRIMARY_KEY" >
+				<column name="id_produto_dw" />
+			</index>
+			<index name="ix_dim_produto_id_produto" unique="NORMAL" spec="USING  btree" >
+				<column name="id_produto" />
+			</index>
+			<constraint name="ck_dim_produto_chave_origem" type="CHECK" options="" >
+				<string><![CDATA[id_produto IS NOT NULL]]></string>
+			</constraint>
+			<constraint name="ck_dim_produto_origem" type="CHECK" options="" >
+				<string><![CDATA[origem_principal)::text = ANY ((ARRAY['MERCEARIA'::character varying, 'NORTHWIND'::character varying, 'INTEGRADO'::character varying])::text[]]]></string>
+			</constraint>
+		</table>
+		<table name="dim_tempo" spec="" >
+			<column name="id_tempo" type="integer" mandatory="y" />
+			<column name="data_completa" type="date" mandatory="y" />
+			<column name="dia" type="integer" mandatory="y" />
+			<column name="mes" type="integer" mandatory="y" />
+			<column name="nome_mes" type="varchar" length="20" mandatory="y" />
+			<column name="trimestre" type="integer" mandatory="y" />
+			<column name="semestre" type="integer" mandatory="y" />
+			<column name="semana_ano" type="integer" mandatory="y" />
+			<column name="ano" type="integer" mandatory="y" />
+			<column name="dia_semana" type="integer" mandatory="y" />
+			<column name="nome_dia_semana" type="varchar" length="20" mandatory="y" />
+			<column name="fim_de_semana" type="boolean" mandatory="y" />
+			<column name="feriado" type="boolean" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+			</column>
+			<index name="dim_tempo_pkey" unique="PRIMARY_KEY" >
+				<column name="id_tempo" />
+			</index>
+			<index name="dim_tempo_data_completa_key" unique="UNIQUE_KEY" >
+				<column name="data_completa" />
+			</index>
+		</table>
+		<table name="dim_transportadora" spec="" >
+			<column name="id_transportadora_dw" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('dw_organizacional.dim_transportadora_id_transportadora_dw_seq'::regclass)]]></defo>
+			</column>
+			<column name="id_shipper" type="smallint" mandatory="y" />
+			<column name="nome" type="varchar" length="255" mandatory="y" />
+			<column name="telefone" type="varchar" length="100" />
+			<column name="data_inicio" type="date" mandatory="y" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<column name="data_fim" type="date" />
+			<column name="registro_atual" type="boolean" mandatory="y" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<column name="data_carga" type="timestamp" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="dim_transportadora_pkey" unique="PRIMARY_KEY" >
+				<column name="id_transportadora_dw" />
+			</index>
+		</table>
+		<table name="dim_vendedor" spec="" >
+			<column name="id_vendedor_dw" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('dw_organizacional.dim_vendedor_id_vendedor_dw_seq'::regclass)]]></defo>
+			</column>
+			<column name="id_employee" type="smallint" mandatory="y" />
+			<column name="nome" type="varchar" length="100" mandatory="y" />
+			<column name="sobrenome" type="varchar" length="100" />
+			<column name="cargo" type="varchar" length="100" />
+			<column name="tratamento" type="varchar" length="50" />
+			<column name="data_nascimento" type="date" />
+			<column name="data_contratacao" type="date" />
+			<column name="endereco" type="varchar" length="255" />
+			<column name="cidade" type="varchar" length="100" />
+			<column name="regiao" type="varchar" length="100" />
+			<column name="cep" type="varchar" length="30" />
+			<column name="pais" type="varchar" length="100" />
+			<column name="telefone" type="varchar" length="100" />
+			<column name="ramal" type="varchar" length="30" />
+			<column name="data_inicio" type="date" mandatory="y" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<column name="data_fim" type="date" />
+			<column name="registro_atual" type="boolean" mandatory="y" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<column name="data_carga" type="timestamp" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="dim_vendedor_pkey" unique="PRIMARY_KEY" >
+				<column name="id_vendedor_dw" />
+			</index>
+			<index name="ix_dim_vendedor_id_employee" unique="NORMAL" spec="USING  btree" >
+				<column name="id_employee" />
+			</index>
+		</table>
+		<table name="fato_compras" spec="" >
+			<column name="id_fato_compra_dw" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('dw_organizacional.fato_compras_id_fato_compra_dw_seq'::regclass)]]></defo>
+			</column>
+			<column name="id_itemcompra" type="integer" />
+			<column name="id_compra" type="integer" />
+			<column name="id_fornecedor_dw" type="bigint" />
+			<column name="id_produto_dw" type="bigint" />
+			<column name="id_tempo" type="integer" />
+			<column name="id_fonte_dw" type="bigint" />
+			<column name="data_pedido" type="date" mandatory="y" />
+			<column name="data_entrada" type="date" />
+			<column name="quantidade" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="valor_unitario" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="valor_total" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="id_origem_registro" type="varchar" length="100" />
+			<column name="sistema_origem" type="varchar" length="50" mandatory="y" />
+			<column name="data_carga" type="timestamp" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="fato_compras_pkey" unique="PRIMARY_KEY" >
+				<column name="id_fato_compra_dw" />
+			</index>
+			<index name="ix_fato_compras_tempo" unique="NORMAL" spec="USING  btree" >
+				<column name="id_tempo" />
+			</index>
+			<index name="ix_fato_compras_fornecedor" unique="NORMAL" spec="USING  btree" >
+				<column name="id_fornecedor_dw" />
+			</index>
+			<index name="ix_fato_compras_produto" unique="NORMAL" spec="USING  btree" >
+				<column name="id_produto_dw" />
+			</index>
+			<fk name="fk_fc_fonte" to_schema="postgres.dw_organizacional" to_table="dim_fonte_dado" options="" >
+				<fk_column name="id_fonte_dw" pk="id_fonte_dw" />
+			</fk>
+			<fk name="fk_fc_produto" to_schema="postgres.dw_organizacional" to_table="dim_produto" options="" >
+				<fk_column name="id_produto_dw" pk="id_produto_dw" />
+			</fk>
+			<fk name="fk_fc_fornecedor" to_schema="postgres.dw_organizacional" to_table="dim_fornecedor" options="" >
+				<fk_column name="id_fornecedor_dw" pk="id_fornecedor_dw" />
+			</fk>
+			<fk name="fk_fc_tempo" to_schema="postgres.dw_organizacional" to_table="dim_tempo" options="" >
+				<fk_column name="id_tempo" pk="id_tempo" />
+			</fk>
+		</table>
+		<table name="fato_estoque" spec="" >
+			<column name="id_fato_estoque_dw" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('dw_organizacional.fato_estoque_id_fato_estoque_dw_seq'::regclass)]]></defo>
+			</column>
+			<column name="id_produto_dw" type="bigint" mandatory="y" />
+			<column name="id_tempo" type="integer" mandatory="y" />
+			<column name="id_fonte_dw" type="bigint" />
+			<column name="quantidade_estoque" type="numeric" length="18" decimal="4" />
+			<column name="quantidade_em_pedido" type="numeric" length="18" decimal="4" />
+			<column name="nivel_reposicao" type="numeric" length="18" decimal="4" />
+			<column name="valor_estoque" type="numeric" length="18" decimal="4" />
+			<column name="sistema_origem" type="varchar" length="50" mandatory="y" />
+			<column name="id_origem_registro" type="varchar" length="100" />
+			<column name="data_carga" type="timestamp" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="fato_estoque_pkey" unique="PRIMARY_KEY" >
+				<column name="id_fato_estoque_dw" />
+			</index>
+			<index name="ix_fato_estoque_produto" unique="NORMAL" spec="USING  btree" >
+				<column name="id_produto_dw" />
+			</index>
+			<index name="ix_fato_estoque_tempo" unique="NORMAL" spec="USING  btree" >
+				<column name="id_tempo" />
+			</index>
+			<fk name="fk_fe_fonte" to_schema="postgres.dw_organizacional" to_table="dim_fonte_dado" options="" >
+				<fk_column name="id_fonte_dw" pk="id_fonte_dw" />
+			</fk>
+			<fk name="fk_fe_tempo" to_schema="postgres.dw_organizacional" to_table="dim_tempo" options="" >
+				<fk_column name="id_tempo" pk="id_tempo" />
+			</fk>
+			<fk name="fk_fe_produto" to_schema="postgres.dw_organizacional" to_table="dim_produto" options="" >
+				<fk_column name="id_produto_dw" pk="id_produto_dw" />
+			</fk>
+		</table>
+		<table name="fato_vendas" spec="" >
+			<column name="id_fato_venda_dw" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('dw_organizacional.fato_vendas_id_fato_venda_dw_seq'::regclass)]]></defo>
+			</column>
+			<column name="id_itemvenda" type="integer" />
+			<column name="id_venda" type="integer" />
+			<column name="id_order" type="integer" />
+			<column name="id_cliente_dw" type="bigint" />
+			<column name="id_produto_dw" type="bigint" />
+			<column name="id_vendedor_dw" type="bigint" />
+			<column name="id_transportadora_dw" type="bigint" />
+			<column name="id_localizacao_dw" type="bigint" />
+			<column name="id_tempo" type="integer" />
+			<column name="id_fonte_dw" type="bigint" />
+			<column name="data_venda" type="date" mandatory="y" />
+			<column name="tipo_venda" type="integer" />
+			<column name="quantidade" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="valor_unitario" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="percentual_desconto" type="numeric" length="9" decimal="6" >
+				<defo><![CDATA[0]]></defo>
+			</column>
+			<column name="valor_bruto" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="valor_desconto" type="numeric" length="18" decimal="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+			</column>
+			<column name="valor_liquido" type="numeric" length="18" decimal="4" mandatory="y" />
+			<column name="frete" type="numeric" length="18" decimal="4" />
+			<column name="id_origem_registro" type="varchar" length="100" />
+			<column name="sistema_origem" type="varchar" length="50" mandatory="y" />
+			<column name="data_carga" type="timestamp" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="fato_vendas_pkey" unique="PRIMARY_KEY" >
+				<column name="id_fato_venda_dw" />
+			</index>
+			<index name="ix_fato_vendas_tempo" unique="NORMAL" spec="USING  btree" >
+				<column name="id_tempo" />
+			</index>
+			<index name="ix_fato_vendas_cliente" unique="NORMAL" spec="USING  btree" >
+				<column name="id_cliente_dw" />
+			</index>
+			<index name="ix_fato_vendas_produto" unique="NORMAL" spec="USING  btree" >
+				<column name="id_produto_dw" />
+			</index>
+			<fk name="fk_fv_fonte" to_schema="postgres.dw_organizacional" to_table="dim_fonte_dado" options="" >
+				<fk_column name="id_fonte_dw" pk="id_fonte_dw" />
+			</fk>
+			<fk name="fk_fv_localizacao" to_schema="postgres.dw_organizacional" to_table="dim_localizacao" options="" >
+				<fk_column name="id_localizacao_dw" pk="id_localizacao_dw" />
+			</fk>
+			<fk name="fk_fv_transportadora" to_schema="postgres.dw_organizacional" to_table="dim_transportadora" options="" >
+				<fk_column name="id_transportadora_dw" pk="id_transportadora_dw" />
+			</fk>
+			<fk name="fk_fv_vendedor" to_schema="postgres.dw_organizacional" to_table="dim_vendedor" options="" >
+				<fk_column name="id_vendedor_dw" pk="id_vendedor_dw" />
+			</fk>
+			<fk name="fk_fv_produto" to_schema="postgres.dw_organizacional" to_table="dim_produto" options="" >
+				<fk_column name="id_produto_dw" pk="id_produto_dw" />
+			</fk>
+			<fk name="fk_fv_cliente" to_schema="postgres.dw_organizacional" to_table="dim_cliente" options="" >
+				<fk_column name="id_cliente_dw" pk="id_cliente_dw" />
+			</fk>
+			<fk name="fk_fv_tempo" to_schema="postgres.dw_organizacional" to_table="dim_tempo" options="" >
+				<fk_column name="id_tempo" pk="id_tempo" />
+			</fk>
+		</table>
+		<sequence name="dim_cliente_id_cliente_dw_seq" options="START WITH 1 INCREMENT BY 1" />
+		<sequence name="dim_dados_externos_id_dados_externos_dw_seq" options="START WITH 1 INCREMENT BY 1" />
+		<sequence name="dim_fonte_dado_id_fonte_dw_seq" options="START WITH 1 INCREMENT BY 1" />
+		<sequence name="dim_fornecedor_id_fornecedor_dw_seq" options="START WITH 1 INCREMENT BY 1" />
+		<sequence name="dim_localizacao_id_localizacao_dw_seq" options="START WITH 1 INCREMENT BY 1" />
+		<sequence name="dim_produto_id_produto_dw_seq" options="START WITH 1 INCREMENT BY 1" />
+		<sequence name="dim_transportadora_id_transportadora_dw_seq" options="START WITH 1 INCREMENT BY 1" />
+		<sequence name="dim_vendedor_id_vendedor_dw_seq" options="START WITH 1 INCREMENT BY 1" />
+		<sequence name="fato_compras_id_fato_compra_dw_seq" options="START WITH 1 INCREMENT BY 1" />
+		<sequence name="fato_estoque_id_fato_estoque_dw_seq" options="START WITH 1 INCREMENT BY 1" />
+		<sequence name="fato_vendas_id_fato_venda_dw_seq" options="START WITH 1 INCREMENT BY 1" />
+	</schema>
+	<schema name="fontes_externas" catalogname="postgres" >
+		<table name="dados_externos" spec="" >
+			<comment><![CDATA[Dados externos sintéticos utilizados pelo DW Organizacional.]]></comment>
+			<column name="id_dado_externo" type="varchar" length="100" mandatory="y" >
+				<comment><![CDATA[Chave natural/de origem preservada para rastreabilidade, metadados e auditoria.]]></comment>
+			</column>
+			<column name="data_referencia" type="date" mandatory="y" >
+				<comment><![CDATA[Data ou período ao qual o indicador externo se refere.]]></comment>
+			</column>
+			<column name="tipo_dado" type="varchar" length="50" mandatory="y" />
+			<column name="indicador" type="varchar" length="100" mandatory="y" />
+			<column name="descricao" type="varchar" length="200" />
+			<column name="valor" type="numeric" length="18" decimal="6" mandatory="y" />
+			<column name="unidade" type="varchar" length="50" />
+			<column name="fonte" type="varchar" length="100" mandatory="y" >
+				<comment><![CDATA[Origem do dado. Neste exercício, os registros são sintéticos.]]></comment>
+			</column>
+			<column name="referencia_origem" type="varchar" length="200" />
+			<column name="data_carga" type="timestamp" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="dados_externos_pkey" unique="PRIMARY_KEY" >
+				<column name="id_dado_externo" />
+			</index>
+		</table>
+	</schema>
+	<schema name="mercearia" catalogname="postgres" >
+		<table name="bairros" row_count="100" spec="" >
+			<column name="id_bairro" type="integer" mandatory="y" />
+			<column name="nome_bairro" type="varchar" length="255" mandatory="y" />
+			<column name="regiaocidade" type="varchar" length="255" mandatory="y" />
+			<column name="id_cidade" type="integer" mandatory="y" />
+			<index name="bairros_pkey" unique="PRIMARY_KEY" >
+				<column name="id_bairro" />
+			</index>
+			<fk name="bairros_id_cidade_fkey" to_schema="postgres.mercearia" to_table="cidades" options="" >
+				<fk_column name="id_cidade" pk="id_cidade" />
+			</fk>
+		</table>
+		<table name="categorias" row_count="0" spec="" >
+			<column name="id_categoria" type="integer" mandatory="y" />
+			<column name="nome_categoria" type="varchar" length="255" mandatory="y" />
+			<index name="categorias_pkey" unique="PRIMARY_KEY" >
+				<column name="id_categoria" />
+			</index>
+		</table>
+		<table name="cidades" row_count="0" spec="" >
+			<column name="id_cidade" type="integer" mandatory="y" />
+			<column name="nome_cidade" type="varchar" length="255" mandatory="y" />
+			<column name="id_uf" type="integer" mandatory="y" />
+			<index name="cidades_pkey" unique="PRIMARY_KEY" >
+				<column name="id_cidade" />
+			</index>
+			<fk name="cidades_id_uf_fkey" to_schema="postgres.mercearia" to_table="uf" options="" >
+				<fk_column name="id_uf" pk="id_uf" />
+			</fk>
+		</table>
+		<table name="compras" row_count="100" spec="" >
+			<column name="id_compra" type="integer" mandatory="y" />
+			<column name="data_pedido" type="date" mandatory="y" />
+			<column name="data_entrada" type="date" />
+			<column name="id_pessoa" type="integer" mandatory="y" />
+			<index name="compras_pkey" unique="PRIMARY_KEY" >
+				<column name="id_compra" />
+			</index>
+			<fk name="compras_id_pessoa_fkey" to_schema="postgres.mercearia" to_table="pessoas" options="" >
+				<fk_column name="id_pessoa" pk="id_pessoa" />
+			</fk>
+		</table>
+		<table name="enderecos" row_count="100" spec="" >
+			<column name="id_endereco" type="integer" mandatory="y" />
+			<column name="id_pessoa" type="integer" mandatory="y" />
+			<column name="id_logradouro" type="integer" mandatory="y" />
+			<column name="tipo_endereco" type="integer" mandatory="y" />
+			<column name="complemento" type="varchar" length="255" />
+			<column name="preferencial" type="bit" length="1" mandatory="y" />
+			<index name="enderecos_pkey" unique="PRIMARY_KEY" >
+				<column name="id_endereco" />
+			</index>
+			<fk name="enderecos_id_logradouro_fkey" to_schema="postgres.mercearia" to_table="logradouros" options="" >
+				<fk_column name="id_logradouro" pk="id_logradouro" />
+			</fk>
+			<fk name="enderecos_id_pessoa_fkey" to_schema="postgres.mercearia" to_table="pessoas" options="" >
+				<fk_column name="id_pessoa" pk="id_pessoa" />
+			</fk>
+		</table>
+		<table name="itens_compras" row_count="1000" spec="" >
+			<column name="id_itemcompra" type="integer" mandatory="y" />
+			<column name="id_compra" type="integer" mandatory="y" />
+			<column name="id_produto" type="integer" mandatory="y" />
+			<column name="quantidade" type="integer" mandatory="y" />
+			<column name="vlr_unitario" type="double precision" mandatory="y" />
+			<index name="itens_compras_pkey" unique="PRIMARY_KEY" >
+				<column name="id_itemcompra" />
+			</index>
+			<fk name="itens_compras_id_produto_fkey" to_schema="postgres.mercearia" to_table="produtos" options="" >
+				<fk_column name="id_produto" pk="id_produto" />
+			</fk>
+			<fk name="itens_compras_id_compra_fkey" to_schema="postgres.mercearia" to_table="compras" options="" >
+				<fk_column name="id_compra" pk="id_compra" />
+			</fk>
+		</table>
+		<table name="itens_vendas" row_count="1000" spec="" >
+			<column name="id_itemvenda" type="integer" mandatory="y" />
+			<column name="id_venda" type="integer" mandatory="y" />
+			<column name="id_produto" type="integer" mandatory="y" />
+			<column name="quantidade" type="integer" mandatory="y" />
+			<column name="vlr_unitario" type="double precision" mandatory="y" />
+			<index name="itens_vendas_pkey" unique="PRIMARY_KEY" >
+				<column name="id_itemvenda" />
+			</index>
+			<fk name="itens_vendas_id_produto_fkey" to_schema="postgres.mercearia" to_table="produtos" options="" >
+				<fk_column name="id_produto" pk="id_produto" />
+			</fk>
+			<fk name="itens_vendas_id_venda_fkey" to_schema="postgres.mercearia" to_table="vendas" options="" >
+				<fk_column name="id_venda" pk="id_venda" />
+			</fk>
+		</table>
+		<table name="logradouros" row_count="100" spec="" >
+			<column name="id_logradouro" type="integer" mandatory="y" />
+			<column name="tipo" type="integer" mandatory="y" />
+			<column name="logradouro" type="varchar" length="255" mandatory="y" />
+			<column name="cep" type="integer" mandatory="y" />
+			<column name="numeroinicial" type="integer" />
+			<column name="numerofinal" type="integer" />
+			<column name="id_bairro" type="integer" mandatory="y" />
+			<index name="logradouros_pkey" unique="PRIMARY_KEY" >
+				<column name="id_logradouro" />
+			</index>
+			<fk name="cep_id_bairro_fkey" to_schema="postgres.mercearia" to_table="bairros" options="" >
+				<fk_column name="id_bairro" pk="id_bairro" />
+			</fk>
+		</table>
+		<table name="pessoas" row_count="100" spec="" >
+			<column name="id_pessoa" type="integer" mandatory="y" />
+			<column name="id_profissao" type="integer" mandatory="y" />
+			<column name="tipo_pessoa" type="integer" />
+			<column name="nome" type="varchar" length="255" />
+			<column name="cpf_cnpj" type="varchar" length="255" />
+			<column name="sexo" type="varchar" length="255" />
+			<column name="renda" type="double precision" />
+			<column name="estado_civil" type="varchar" length="255" />
+			<column name="data_nascimento" type="date" />
+			<index name="pessoas_pkey" unique="PRIMARY_KEY" >
+				<column name="id_pessoa" />
+			</index>
+			<fk name="pessoas_id_profissao_fkey" to_schema="postgres.mercearia" to_table="profissoes" options="" >
+				<fk_column name="id_profissao" pk="id_profissao" />
+			</fk>
+		</table>
+		<table name="produtos" row_count="100" spec="" >
+			<column name="id_produto" type="integer" mandatory="y" />
+			<column name="id_categoria" type="integer" mandatory="y" />
+			<column name="produto" type="varchar" length="255" mandatory="y" />
+			<column name="valor_venda" type="double precision" mandatory="y" />
+			<index name="produtos_pkey" unique="PRIMARY_KEY" >
+				<column name="id_produto" />
+			</index>
+			<fk name="produtos_id_categoria_fkey" to_schema="postgres.mercearia" to_table="categorias" options="" >
+				<fk_column name="id_categoria" pk="id_categoria" />
+			</fk>
+		</table>
+		<table name="profissoes" row_count="0" spec="" >
+			<column name="id_profissao" type="integer" mandatory="y" />
+			<column name="nome_profissao" type="varchar" length="20" mandatory="y" />
+			<index name="profissoes_pkey" unique="PRIMARY_KEY" >
+				<column name="id_profissao" />
+			</index>
+		</table>
+		<table name="telefones" row_count="0" spec="" >
+			<column name="id_telefone" type="integer" mandatory="y" />
+			<column name="id_pessoa" type="integer" mandatory="y" />
+			<column name="ddd" type="integer" mandatory="y" />
+			<column name="telefone" type="varchar" length="255" mandatory="y" />
+			<column name="tipo" type="integer" mandatory="y" />
+			<column name="preferencial" type="bit" length="1" mandatory="y" />
+			<column name="status" type="varchar" length="1" mandatory="y" />
+			<index name="telefones_pkey" unique="PRIMARY_KEY" >
+				<column name="id_telefone" />
+			</index>
+			<fk name="telefones_id_pessoa_fkey" to_schema="postgres.mercearia" to_table="pessoas" options="" >
+				<fk_column name="id_pessoa" pk="id_pessoa" />
+			</fk>
+		</table>
+		<table name="uf" row_count="0" spec="" >
+			<column name="id_uf" type="integer" mandatory="y" />
+			<column name="nome_estado" type="varchar" length="20" mandatory="y" />
+			<column name="sigla" type="varchar" length="2" mandatory="y" />
+			<index name="uf_pkey" unique="PRIMARY_KEY" >
+				<column name="id_uf" />
+			</index>
+		</table>
+		<table name="vendas" row_count="100" spec="" >
+			<column name="id_venda" type="integer" mandatory="y" />
+			<column name="id_pessoa" type="integer" mandatory="y" />
+			<column name="data_venda" type="date" mandatory="y" />
+			<column name="data_faturamento" type="date" />
+			<column name="tipo_venda" type="integer" mandatory="y" />
+			<index name="vendas_pkey" unique="PRIMARY_KEY" >
+				<column name="id_venda" />
+			</index>
+			<fk name="vendas_id_pessoa_fkey" to_schema="postgres.mercearia" to_table="pessoas" options="" >
+				<fk_column name="id_pessoa" pk="id_pessoa" />
+			</fk>
+		</table>
+	</schema>
+	<schema name="northwind" catalogname="postgres" >
+		<table name="categories" row_count="8" spec="" >
+			<column name="category_id" type="smallint" mandatory="y" />
+			<column name="category_name" type="varchar" length="15" mandatory="y" />
+			<column name="description" type="text" />
+			<column name="picture" type="bytea" />
+			<index name="pk_categories" unique="PRIMARY_KEY" >
+				<column name="category_id" />
+			</index>
+		</table>
+		<table name="customer_customer_demo" row_count="0" spec="" >
+			<column name="customer_id" type="varchar" length="5" mandatory="y" />
+			<column name="customer_type_id" type="varchar" length="5" mandatory="y" />
+			<index name="pk_customer_customer_demo" unique="PRIMARY_KEY" >
+				<column name="customer_id" />
+				<column name="customer_type_id" />
+			</index>
+			<fk name="fk_customer_customer_demo_customer_demographics" to_schema="postgres.northwind" to_table="customer_demographics" options="" >
+				<fk_column name="customer_type_id" pk="customer_type_id" />
+			</fk>
+			<fk name="fk_customer_customer_demo_customers" to_schema="postgres.northwind" to_table="customers" options="" >
+				<fk_column name="customer_id" pk="customer_id" />
+			</fk>
+		</table>
+		<table name="customer_demographics" row_count="0" spec="" >
+			<column name="customer_type_id" type="varchar" length="5" mandatory="y" />
+			<column name="customer_desc" type="text" />
+			<index name="pk_customer_demographics" unique="PRIMARY_KEY" >
+				<column name="customer_type_id" />
+			</index>
+		</table>
+		<table name="customers" row_count="91" spec="" >
+			<column name="customer_id" type="varchar" length="5" mandatory="y" />
+			<column name="company_name" type="varchar" length="40" mandatory="y" />
+			<column name="contact_name" type="varchar" length="30" />
+			<column name="contact_title" type="varchar" length="30" />
+			<column name="address" type="varchar" length="60" />
+			<column name="city" type="varchar" length="15" />
+			<column name="region" type="varchar" length="15" />
+			<column name="postal_code" type="varchar" length="10" />
+			<column name="country" type="varchar" length="15" />
+			<column name="phone" type="varchar" length="24" />
+			<column name="fax" type="varchar" length="24" />
+			<index name="pk_customers" unique="PRIMARY_KEY" >
+				<column name="customer_id" />
+			</index>
+		</table>
+		<table name="employee_territories" row_count="49" spec="" >
+			<column name="employee_id" type="smallint" mandatory="y" />
+			<column name="territory_id" type="varchar" length="20" mandatory="y" />
+			<index name="pk_employee_territories" unique="PRIMARY_KEY" >
+				<column name="employee_id" />
+				<column name="territory_id" />
+			</index>
+			<fk name="fk_employee_territories_territories" to_schema="postgres.northwind" to_table="territories" options="" >
+				<fk_column name="territory_id" pk="territory_id" />
+			</fk>
+			<fk name="fk_employee_territories_employees" to_schema="postgres.northwind" to_table="employees" options="" >
+				<fk_column name="employee_id" pk="employee_id" />
+			</fk>
+		</table>
+		<table name="employees" row_count="9" spec="" >
+			<column name="employee_id" type="smallint" mandatory="y" />
+			<column name="last_name" type="varchar" length="20" mandatory="y" />
+			<column name="first_name" type="varchar" length="10" mandatory="y" />
+			<column name="title" type="varchar" length="30" />
+			<column name="title_of_courtesy" type="varchar" length="25" />
+			<column name="birth_date" type="date" />
+			<column name="hire_date" type="date" />
+			<column name="address" type="varchar" length="60" />
+			<column name="city" type="varchar" length="15" />
+			<column name="region" type="varchar" length="15" />
+			<column name="postal_code" type="varchar" length="10" />
+			<column name="country" type="varchar" length="15" />
+			<column name="home_phone" type="varchar" length="24" />
+			<column name="extension" type="varchar" length="4" />
+			<column name="photo" type="bytea" />
+			<column name="notes" type="text" />
+			<column name="reports_to" type="smallint" />
+			<column name="photo_path" type="varchar" length="255" />
+			<index name="pk_employees" unique="PRIMARY_KEY" >
+				<column name="employee_id" />
+			</index>
+			<fk name="fk_employees_employees" to_schema="postgres.northwind" to_table="employees" options="" >
+				<fk_column name="reports_to" pk="employee_id" />
+			</fk>
+		</table>
+		<table name="order_details" row_count="2155" spec="" >
+			<column name="order_id" type="smallint" mandatory="y" />
+			<column name="product_id" type="smallint" mandatory="y" />
+			<column name="unit_price" type="real" mandatory="y" />
+			<column name="quantity" type="smallint" mandatory="y" />
+			<column name="discount" type="real" mandatory="y" />
+			<index name="pk_order_details" unique="PRIMARY_KEY" >
+				<column name="order_id" />
+				<column name="product_id" />
+			</index>
+			<fk name="fk_order_details_products" to_schema="postgres.northwind" to_table="products" options="" >
+				<fk_column name="product_id" pk="product_id" />
+			</fk>
+			<fk name="fk_order_details_orders" to_schema="postgres.northwind" to_table="orders" options="" >
+				<fk_column name="order_id" pk="order_id" />
+			</fk>
+		</table>
+		<table name="orders" row_count="830" spec="" >
+			<column name="order_id" type="smallint" mandatory="y" />
+			<column name="customer_id" type="varchar" length="5" />
+			<column name="employee_id" type="smallint" />
+			<column name="order_date" type="date" />
+			<column name="required_date" type="date" />
+			<column name="shipped_date" type="date" />
+			<column name="ship_via" type="smallint" />
+			<column name="freight" type="real" />
+			<column name="ship_name" type="varchar" length="40" />
+			<column name="ship_address" type="varchar" length="60" />
+			<column name="ship_city" type="varchar" length="15" />
+			<column name="ship_region" type="varchar" length="15" />
+			<column name="ship_postal_code" type="varchar" length="10" />
+			<column name="ship_country" type="varchar" length="15" />
+			<index name="pk_orders" unique="PRIMARY_KEY" >
+				<column name="order_id" />
+			</index>
+			<fk name="fk_orders_customers" to_schema="postgres.northwind" to_table="customers" options="" >
+				<fk_column name="customer_id" pk="customer_id" />
+			</fk>
+			<fk name="fk_orders_employees" to_schema="postgres.northwind" to_table="employees" options="" >
+				<fk_column name="employee_id" pk="employee_id" />
+			</fk>
+			<fk name="fk_orders_shippers" to_schema="postgres.northwind" to_table="shippers" options="" >
+				<fk_column name="ship_via" pk="shipper_id" />
+			</fk>
+		</table>
+		<table name="products" row_count="77" spec="" >
+			<column name="product_id" type="smallint" mandatory="y" />
+			<column name="product_name" type="varchar" length="40" mandatory="y" />
+			<column name="supplier_id" type="smallint" />
+			<column name="category_id" type="smallint" />
+			<column name="quantity_per_unit" type="varchar" length="20" />
+			<column name="unit_price" type="real" />
+			<column name="units_in_stock" type="smallint" />
+			<column name="units_on_order" type="smallint" />
+			<column name="reorder_level" type="smallint" />
+			<column name="discontinued" type="integer" mandatory="y" />
+			<index name="pk_products" unique="PRIMARY_KEY" >
+				<column name="product_id" />
+			</index>
+			<fk name="fk_products_categories" to_schema="postgres.northwind" to_table="categories" options="" >
+				<fk_column name="category_id" pk="category_id" />
+			</fk>
+			<fk name="fk_products_suppliers" to_schema="postgres.northwind" to_table="suppliers" options="" >
+				<fk_column name="supplier_id" pk="supplier_id" />
+			</fk>
+		</table>
+		<table name="region" row_count="4" spec="" >
+			<column name="region_id" type="smallint" mandatory="y" />
+			<column name="region_description" type="varchar" length="60" mandatory="y" />
+			<index name="pk_region" unique="PRIMARY_KEY" >
+				<column name="region_id" />
+			</index>
+		</table>
+		<table name="shippers" row_count="6" spec="" >
+			<column name="shipper_id" type="smallint" mandatory="y" />
+			<column name="company_name" type="varchar" length="40" mandatory="y" />
+			<column name="phone" type="varchar" length="24" />
+			<index name="pk_shippers" unique="PRIMARY_KEY" >
+				<column name="shipper_id" />
+			</index>
+		</table>
+		<table name="suppliers" row_count="29" spec="" >
+			<column name="supplier_id" type="smallint" mandatory="y" />
+			<column name="company_name" type="varchar" length="40" mandatory="y" />
+			<column name="contact_name" type="varchar" length="30" />
+			<column name="contact_title" type="varchar" length="30" />
+			<column name="address" type="varchar" length="60" />
+			<column name="city" type="varchar" length="15" />
+			<column name="region" type="varchar" length="15" />
+			<column name="postal_code" type="varchar" length="10" />
+			<column name="country" type="varchar" length="15" />
+			<column name="phone" type="varchar" length="24" />
+			<column name="fax" type="varchar" length="24" />
+			<column name="homepage" type="text" />
+			<index name="pk_suppliers" unique="PRIMARY_KEY" >
+				<column name="supplier_id" />
+			</index>
+		</table>
+		<table name="territories" row_count="53" spec="" >
+			<column name="territory_id" type="varchar" length="20" mandatory="y" />
+			<column name="territory_description" type="varchar" length="60" mandatory="y" />
+			<column name="region_id" type="smallint" mandatory="y" />
+			<index name="pk_territories" unique="PRIMARY_KEY" >
+				<column name="territory_id" />
+			</index>
+			<fk name="fk_territories_region" to_schema="postgres.northwind" to_table="region" options="" >
+				<fk_column name="region_id" pk="region_id" />
+			</fk>
+		</table>
+		<table name="us_states" row_count="51" spec="" >
+			<column name="state_id" type="smallint" mandatory="y" />
+			<column name="state_name" type="varchar" length="100" />
+			<column name="state_abbr" type="varchar" length="2" />
+			<column name="state_region" type="varchar" length="50" />
+			<index name="pk_usstates" unique="PRIMARY_KEY" >
+				<column name="state_id" />
+			</index>
+		</table>
+		<function name="gerar_matriz_produtos_dinamica" id="b583a396-3c3a-4ee4-be85-9f7d79109957" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE OR REPLACE FUNCTION northwind.gerar_matriz_produtos_dinamica()
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_lista_colunas TEXT;
+    v_query_completa TEXT;
+BEGIN
+    -- Busca todos os produtos únicos de forma ordenada para criar a definição das colunas
+    -- Transforma os nomes dos produtos em: "Nome do Produto" VARCHAR(3)
+    SELECT STRING_AGG(FORMAT('%I VARCHAR(3)', product_name), ', ' ORDER BY product_name)
+    INTO v_lista_colunas
+    FROM northwind.products;
+
+    -- Monta a string do comando SQL usando o crosstab tradicional de 2 parâmetros
+    v_query_completa := FORMAT('
+        SELECT * FROM crosstab(
+            -- Query 1: Retorna identificador (Linha), categoria (Coluna) e valor (Conteúdo)
+            $S$ SELECT o.order_id, p.product_name 
+                FROM northwind.orders o
+                INNER JOIN northwind.order_details od ON o.order_id = od.order_id
+                INNER JOIN northwind.products p ON od.product_id = p.product_id 
+                ORDER BY 1, 2 $S$,
+            -- Query 2: Lista exata das colunas (Categorias) na mesma ordem da Query 1
+            $S$ SELECT product_name FROM northwind.products ORDER BY product_name $S$
+        ) AS matriz_pivo (
+            order_id INT,
+            %s
+        );', v_lista_colunas);
+
+    -- Retorna o comando SQL gerado para ser executado
+    RETURN v_query_completa;
+END;
+$function$;]]></string>
+		</function>
+	</schema>
+	<schema name="public" catalogname="postgres" >
+		<comment><![CDATA[standard public schema]]></comment>
+	</schema>
+	<diagram_group name="Default" id="8254c9b8-b1c6-4628-b4f3-9771e34fe1c3" >
+		<diagram name="mercearia" id="2cd9fc17-3e9a-4555-a0ff-d7376b386710" confirmed="y" show_relation="columns" >
+			<entity schema="postgres.mercearia" name="bairros" color="C7F4BE" x="589" y="323" />
+			<entity schema="postgres.mercearia" name="categorias" color="BED3F4" x="1178" y="703" />
+			<entity schema="postgres.mercearia" name="cidades" color="C7F4BE" x="589" y="95" />
+			<entity schema="postgres.mercearia" name="compras" color="BED3F4" x="931" y="665" />
+			<entity schema="postgres.mercearia" name="enderecos" color="C7F4BE" x="57" y="323" />
+			<entity schema="postgres.mercearia" name="itens_compras" color="BED3F4" x="1444" y="437" />
+			<entity schema="postgres.mercearia" name="itens_vendas" color="BED3F4" x="1178" y="437" />
+			<entity schema="postgres.mercearia" name="logradouros" color="C7F4BE" x="323" y="323" />
+			<entity schema="postgres.mercearia" name="pessoas" color="BED3F4" x="893" y="95" />
+			<entity schema="postgres.mercearia" name="produtos" color="BED3F4" x="1710" y="703" />
+			<entity schema="postgres.mercearia" name="profissoes" color="BED3F4" x="1444" y="703" />
+			<entity schema="postgres.mercearia" name="telefones" color="BED3F4" x="1444" y="912" />
+			<entity schema="postgres.mercearia" name="uf" color="C7F4BE" x="323" y="95" />
+			<entity schema="postgres.mercearia" name="vendas" color="BED3F4" x="1159" y="912" />
+			<group name="uf" color="EEF7EC" >
+				<entity schema="postgres.mercearia" name="bairros" />
+				<entity schema="postgres.mercearia" name="cidades" />
+				<entity schema="postgres.mercearia" name="enderecos" />
+				<entity schema="postgres.mercearia" name="logradouros" />
+				<entity schema="postgres.mercearia" name="uf" />
+			</group>
+			<group name="categorias" color="ECF0F7" >
+				<entity schema="postgres.mercearia" name="categorias" />
+				<entity schema="postgres.mercearia" name="compras" />
+				<entity schema="postgres.mercearia" name="itens_compras" />
+				<entity schema="postgres.mercearia" name="itens_vendas" />
+				<entity schema="postgres.mercearia" name="pessoas" />
+				<entity schema="postgres.mercearia" name="produtos" />
+				<entity schema="postgres.mercearia" name="profissoes" />
+				<entity schema="postgres.mercearia" name="telefones" />
+				<entity schema="postgres.mercearia" name="vendas" />
+			</group>
+		</diagram>
+		<diagram name="northwind" id="f0628d25-615d-49dd-87cb-b5933d9dc23f" confirmed="y" show_relation="columns" >
+			<entity schema="postgres.northwind" name="categories" color="BED3F4" x="1254" y="418" />
+			<entity schema="postgres.northwind" name="customer_customer_demo" color="F4DDBE" x="1539" y="95" />
+			<entity schema="postgres.northwind" name="customer_demographics" color="F4DDBE" x="1235" y="95" />
+			<entity schema="postgres.northwind" name="customers" color="C7F4BE" x="342" y="1140" />
+			<entity schema="postgres.northwind" name="employee_territories" color="C7F4BE" x="893" y="1159" />
+			<entity schema="postgres.northwind" name="employees" color="C7F4BE" x="342" y="418" />
+			<entity schema="postgres.northwind" name="order_details" color="C7F4BE" x="627" y="1159" />
+			<entity schema="postgres.northwind" name="orders" color="C7F4BE" x="57" y="1140" />
+			<entity schema="postgres.northwind" name="products" color="BED3F4" x="1235" y="665" />
+			<entity schema="postgres.northwind" name="region" color="C7F4BE" x="342" y="931" />
+			<entity schema="postgres.northwind" name="shippers" color="C7F4BE" x="627" y="931" />
+			<entity schema="postgres.northwind" name="suppliers" color="BED3F4" x="1520" y="418" />
+			<entity schema="postgres.northwind" name="territories" color="C7F4BE" x="893" y="931" />
+			<entity schema="postgres.northwind" name="us_states" color="3986C1" x="950" y="95" />
+			<group name="customer_demographics" color="F7F2EC" >
+				<entity schema="postgres.northwind" name="customer_customer_demo" />
+				<entity schema="postgres.northwind" name="customer_demographics" />
+			</group>
+			<group name="categories" color="ECF0F7" >
+				<entity schema="postgres.northwind" name="categories" />
+				<entity schema="postgres.northwind" name="products" />
+				<entity schema="postgres.northwind" name="suppliers" />
+			</group>
+			<group name="region" color="EEF7EC" >
+				<entity schema="postgres.northwind" name="customers" />
+				<entity schema="postgres.northwind" name="employee_territories" />
+				<entity schema="postgres.northwind" name="employees" />
+				<entity schema="postgres.northwind" name="order_details" />
+				<entity schema="postgres.northwind" name="orders" />
+				<entity schema="postgres.northwind" name="region" />
+				<entity schema="postgres.northwind" name="shippers" />
+				<entity schema="postgres.northwind" name="territories" />
+			</group>
+		</diagram>
+		<diagram name="Diagram dm_compras" id="2b40007a-b121-48de-a048-c5a1844127ee" show_relation="columns" >
+			<entity schema="postgres.dm_compras" name="dim_fornecedor" color="BED3F4" x="57" y="95" />
+			<entity schema="postgres.dm_compras" name="dim_produto" color="BED3F4" x="646" y="95" />
+			<entity schema="postgres.dm_compras" name="dim_tempo" color="BED3F4" x="646" y="285" />
+			<entity schema="postgres.dm_compras" name="fato_compras" color="BED3F4" x="342" y="95" />
+			<group name="dim_fornecedor" color="ECF0F7" >
+				<entity schema="postgres.dm_compras" name="dim_fornecedor" />
+				<entity schema="postgres.dm_compras" name="dim_produto" />
+				<entity schema="postgres.dm_compras" name="dim_tempo" />
+				<entity schema="postgres.dm_compras" name="fato_compras" />
+			</group>
+		</diagram>
+	</diagram_group>
+</project>
